@@ -1,0 +1,132 @@
+<p>reactiveform works!</p>
+<div class="container mx-auto p-4">
+    <!-- (ngSubmit)="onSubmit()" -->
+    <form
+      [formGroup]="regForm" (ngSubmit)="register(regForm)"
+      class="max-w-md mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+    >
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="fname">
+          First Name
+        </label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="fname"
+          name="fname"
+          type="text"
+          formControlName="fname"
+          placeholder="Enter the First Name"
+        />
+        <div *ngIf="regForm.controls['fname'].touched && !regForm.controls['fname'].valid">
+           
+          <span *ngIf="regForm.controls['fname'].hasError('required')"class="text-red-500 text-sm mt-1">
+              Last Name is required !!
+          </span>
+          <span *ngIf="regForm.controls['fname'].hasError('pattern')"class="text-red-500 text-sm mt-1">
+            Only alphabets are allowed in First Name !!
+          </span>
+
+      </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="lname">
+          Last Name
+        </label>
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="lname"
+          name="lname"
+          type="text"
+          formControlName="lname"
+          placeholder="Enter the Last Name"
+        />
+        <!-- <div *ngIf="regForm.controls['lname'].touched && !regForm.controls['lname'].valid">
+            Last Name is required !!
+        </div> -->
+        <div *ngIf="regForm.controls['lname'].touched && !regForm.controls['lname'].valid">
+           
+            <span *ngIf="regForm.controls['lname'].hasError('required')"class="text-red-500 text-sm mt-1">
+                Last Name is required !!
+            </span>
+            <span *ngIf="regForm.controls['lname'].hasError('minlength')"class="text-red-500 text-sm mt-1">
+                Last Name should be 5 char !!
+            </span>
+            <span *ngIf="regForm.controls['lname'].hasError('maxlength')"class="text-red-500 text-sm mt-1">
+                Last Name should be less than 10 char !!
+            </span>
+
+        </div>
+
+     
+      </div>
+    
+  
+
+      <div class="mb-4" formArrayName="mobileNumbers">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="mobileNumber">
+          Mobile Number
+        </label>
+        <div *ngFor="let mobileNumber of regForm.get('mobileNumbers').controls; index as idx" class="mb-4">
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="mobileNumber"
+            name="mobileNumber"
+            type="number"
+            [formControlName]="mobileNumber"
+            placeholder="Enter the Mobile Number"
+            />
+            <!-- [formControlName]="idx" -->
+          <div *ngIf="regForm.get('mobileNumbers').at(idx).touched && !regForm.get('mobileNumbers').at(idx).valid" class="text-red-500 text-sm mt-1">
+            Mobile Number is required !!
+          </div>
+          <div class="flex items-center mt-4">
+            <button
+              class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline text-sm"
+              (click)="deleterow(idx)">
+              Delete
+            </button>
+            <button
+              class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline text-sm ml-2"
+              (click)="addmore()">
+              Add More..
+            </button>
+          </div>
+        </div>
+      </div>
+      
+    
+      
+  
+      <div class="flex items-center justify-between">
+        <button
+          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
+          Submit
+        </button>
+
+        <button
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        type="reset"
+      >
+        Cancel
+      </button>
+
+      <button
+      class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+     (click)="reset()"
+    >
+      Cancel 2
+    </button>
+
+    <button
+    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+   (click)="filldata()"
+  >
+    Fill Data
+  </button>
+      </div>
+    </form>
+  </div>
+  
