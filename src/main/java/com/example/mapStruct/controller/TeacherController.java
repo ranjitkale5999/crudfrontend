@@ -34,6 +34,7 @@ public class TeacherController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+
     @GetMapping(value = "/teacher/{id}")
     public ResponseEntity<ErrorResponse<?>> getByIdTeacher(@PathVariable Long id) {
         TeacherDto teachers = teacherService.getByIdTeachers(id);
@@ -41,7 +42,7 @@ public class TeacherController {
         ErrorResponse<TeacherDto> response = new ErrorResponse<>(
                 LocalDateTime.now(),
                 HttpStatus.OK.value(),
-                "Teacher list fetched successfully",
+                "Teacher data fetched by Id :-" + id,
                 teachers
         );
 
@@ -72,6 +73,23 @@ public class TeacherController {
                 HttpStatus.OK.value(),
                 "Teacher deleted successfully with ID: " + id,
                 null
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/teacher/{id}")
+    public ResponseEntity<ErrorResponse<TeacherDto>> updateTeacher(
+            @Valid @PathVariable Long id,
+            @Valid @RequestBody TeacherDto teacherDto
+    ) {
+        TeacherDto updatedTeacher = teacherService.updateTeacher(id, teacherDto);
+
+        ErrorResponse<TeacherDto> response = new ErrorResponse<>(
+                LocalDateTime.now(),
+                HttpStatus.OK.value(),
+                "Teacher updated successfully with ID: " + id,
+                updatedTeacher
         );
 
         return ResponseEntity.ok(response);

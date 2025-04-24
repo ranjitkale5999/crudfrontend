@@ -57,4 +57,17 @@ public class TeacherService {
 
         teacherRepo.delete(teacher);
     }
+
+
+    public TeacherDto updateTeacher(Long id, TeacherDto teacherDto) {
+        Teacher teacher = teacherRepo.findById(id)
+                .orElseThrow(() -> new InvalidInputException("Teacher not found with ID:- " + id));
+
+        teacher.setName(teacherDto.getName());
+        teacher.setSubject(teacherDto.getSubject());
+
+        Teacher updateTeacher = teacherRepo.save(teacher);
+        return teacherMapper.maptoTeacherDto(updateTeacher);
+    }
+
 }
