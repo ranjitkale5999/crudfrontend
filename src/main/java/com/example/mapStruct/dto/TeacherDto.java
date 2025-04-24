@@ -19,8 +19,5 @@ public class TeacherDto {
     @Size(min = 3, message = "subject should not be less than 3")
     private String subject;
 
-
-//    private Set<Long> studentIds;
-
 //private Set<StudentDto> students = new HashSet<>();
 }
