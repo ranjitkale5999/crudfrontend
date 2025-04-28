@@ -16,6 +16,7 @@ import { StudupdateComponent } from './ReactiveForms/studupdate/studupdate.compo
 import { StudreactiveComponent } from './ReactiveForms/studreactive/studreactive.component';
 import { StudentUpdateComponent } from './ReactiveForms/student-update/student-update.component';
 import { MatButtonModule } from '@angular/material/button';
+import{ MatPaginatorModule} from'@angular/material/paginator';
 @NgModule({ declarations: [
         AppComponent,
         StudComponent,
@@ -37,6 +38,7 @@ import { MatButtonModule } from '@angular/material/button';
         ReactiveFormsModule,
         CommonModule,
         MatButtonModule,
+        MatPaginatorModule
         
 ],
         providers: [provideHttpClient(withInterceptorsFromDi())] })

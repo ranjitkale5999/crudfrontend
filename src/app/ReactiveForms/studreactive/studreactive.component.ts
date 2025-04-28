@@ -9,6 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { StudupdateComponent } from '../studupdate/studupdate.component';
 import { StudentUpdateComponent } from '../student-update/student-update.component';
 import { StudaddComponent } from '../studadd/studadd.component';
+import { PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-studreactive',
   standalone: false,
@@ -19,6 +20,11 @@ export class StudreactiveComponent {
   students: Student[] = [];
   formsearch!: FormGroup;
   addresses: Address[] = [];
+
+  pagedStudents: Student[] = [];
+   pageSize = 5;
+   currentPage = 0;
+   totalStudents = 0;
   constructor(
     private studentService: StudentService,
     private addressService: AddressService,
@@ -39,6 +45,8 @@ export class StudreactiveComponent {
     this.studentService.getStudentList().subscribe((data) => {
       console.log("Student List :-",data);
       this.students = data;
+      this.totalStudents = this.students.length;
+      this.updatePagedStudents();
     });
   }
   delete(id: number) {
@@ -122,5 +130,20 @@ showPrompt(): void {
   });
 
 }
+
+// Pagination
+updatePagedStudents() {
+  const startIndex = this.currentPage * this.pageSize;
+  const endIndex = startIndex + this.pageSize;
+  // this.students = this.students.slice(startIndex, endIndex);
+  this.pagedStudents = this.students.slice(startIndex, endIndex);
+}
+
+onPageChange(event: PageEvent) {
+  this.pageSize = event.pageSize;
+  this.currentPage = event.pageIndex;
+  this.updatePagedStudents();
+}
+
 
 }
