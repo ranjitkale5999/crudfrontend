@@ -1,6 +1,6 @@
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-// import { BrowserModule } from '@angular/platform-browser'
+import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +15,7 @@ import { StudaddComponent } from './ReactiveForms/studadd/studadd.component';
 import { StudupdateComponent } from './ReactiveForms/studupdate/studupdate.component';
 import { StudreactiveComponent } from './ReactiveForms/studreactive/studreactive.component';
 import { StudentUpdateComponent } from './ReactiveForms/student-update/student-update.component';
+import { MatButtonModule } from '@angular/material/button';
 @NgModule({ declarations: [
         AppComponent,
         StudComponent,
@@ -32,7 +33,11 @@ import { StudentUpdateComponent } from './ReactiveForms/student-update/student-u
         AppRoutingModule,
         NgSelectModule,
         FormsModule,
+        MatDialogModule,
         ReactiveFormsModule,
-        CommonModule],
+        CommonModule,
+        MatButtonModule,
+        
+],
         providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

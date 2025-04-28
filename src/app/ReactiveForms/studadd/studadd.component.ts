@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Department } from '../../Class/department';
 import { DepartmentService } from '../../Service/department.service';
@@ -7,6 +7,7 @@ import { StudentService } from '../../Service/student.service';
 import { Router } from '@angular/router';
 import { TeacherService } from '../../Service/teacher.service';
 import { Teacher } from '../../Class/teacher';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-studadd',
@@ -30,6 +31,8 @@ export class StudaddComponent {
     private teacherService:TeacherService,
     private studentService: StudentService,
     private router: Router,
+    @Inject(MAT_DIALOG_DATA) data:any,
+    public dialogRef: MatDialogRef<StudaddComponent>
   ) {
 
   }
@@ -68,7 +71,11 @@ export class StudaddComponent {
 
 
   goToStudent() {
-    this.router.navigate(['/studrective']);
+    // this.router.navigate(['/studrective']);
+    this.dialogRef.close();
+    this.router.navigate(['/studrective']).then(() => {
+      window.location.reload();
+    });
   }
 
   // Departent
@@ -108,6 +115,8 @@ export class StudaddComponent {
     this.studentService.createStudent(this.student).subscribe(data => {
       console.log('Student saved successfully:', data);
       this.goToStudent();
+
+
     }, error => {
       console.error('Error saving student:', error);
     });
@@ -136,9 +145,9 @@ deleterow(val:any){
 // Teacher 
  getTeachers() {
 
-  this.teacherService.getTeacherList().subscribe(data => {
-    console.log("Teacher List",data)
-    this.teachers=data;
+  this.teacherService.getTeacherList().subscribe(response => {
+    console.log("Teacher List",response)
+    this.teachers=response.data;
   })
 }
 

@@ -5,6 +5,10 @@ import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Address } from '../../Class/address';
 import { AddressService } from '../../Service/address.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { StudupdateComponent } from '../studupdate/studupdate.component';
+import { StudentUpdateComponent } from '../student-update/student-update.component';
+import { StudaddComponent } from '../studadd/studadd.component';
 @Component({
   selector: 'app-studreactive',
   standalone: false,
@@ -19,7 +23,7 @@ export class StudreactiveComponent {
     private studentService: StudentService,
     private addressService: AddressService,
     private fb: FormBuilder,
-    // private cdr: ChangeDetectorRef ,
+    private dialog: MatDialog,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -33,7 +37,7 @@ export class StudreactiveComponent {
   }
   getStudents() {
     this.studentService.getStudentList().subscribe((data) => {
-      // console.log("Student List :-",data);
+      console.log("Student List :-",data);
       this.students = data;
     });
   }
@@ -45,8 +49,17 @@ export class StudreactiveComponent {
   }
 
   update(id: number) {
-    this.router.navigate(['studUpdate', id]);
+    // this.router.navigate(['studUpdate', id]);
+    const dialogRef = this.dialog.open(StudupdateComponent, {
+     
+      width:'50%',
+      height: '90%',
+      enterAnimationDuration: '500ms',
+      exitAnimationDuration: '900ms',
+      data: { id: id }, // 👈 pass id to dialog
+    });
   }
+ 
   // Address List
   uniqueAreas: string[] = [];
   uniqueCities: string[] = [];
@@ -96,6 +109,18 @@ export class StudreactiveComponent {
 
 }
 
+// Dialog Box
+dataFromDialog: any;
 
+
+showPrompt(): void {
+  const dialogRef = this.dialog.open(StudaddComponent, {
+    width:'50%',
+    height: '90%',
+    enterAnimationDuration: '500ms', 
+   exitAnimationDuration: '900ms',
+  });
+
+}
 
 }

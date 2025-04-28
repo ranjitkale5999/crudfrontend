@@ -4,13 +4,15 @@
   <div>
     <p class="text-xl font-bold mb-4">Student List Using Reactive Form</p>
   
-    <button
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-      routerLink="/studadd"
-    >
-      Add Student
-    </button>
-
+        <!-- Dialog box -->
+      <section class="mat-button-container">
+        <div class="example-button-row">
+  
+          <button mat-raised-button color="accent" (click)="showPrompt()">
+            Add Student
+          </button>
+        </div>
+      </section>
  
     
     <!-- Search area and city Start -->
@@ -120,11 +122,14 @@
             </button>
           </td>
           <td class="py-2 px-4 border-r" style="text-align: center">
-            <button
+            <!-- <button
               (click)="update(student.id)"
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 border-r"
               style="text-align: center"
             >
+              Update
+            </button> -->
+            <button mat-raised-button color="primary" (click)="update(student.id)">
               Update
             </button>
           </td>
@@ -132,4 +137,9 @@
       </tbody>
     </table>
     </div>
+
+
+  
+    
+   
   </div>
