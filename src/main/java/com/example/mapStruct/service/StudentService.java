@@ -2,6 +2,7 @@ package com.example.mapStruct.service;
 
 import com.example.mapStruct.dto.AddressDto;
 import com.example.mapStruct.dto.MobileNumberDto;
+import com.example.mapStruct.dto.PaginatedResponse;
 import com.example.mapStruct.dto.StudentDto;
 import com.example.mapStruct.entity.*;
 import com.example.mapStruct.mapper.StudentMapper;
@@ -10,11 +11,16 @@ import com.example.mapStruct.repository.DepartmentRepo;
 import com.example.mapStruct.repository.StudentRepository;
 import com.example.mapStruct.repository.TeacherRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.management.AttributeNotFoundException;
 
 import javax.transaction.Transactional;
+
+import org.springframework.data.domain.Pageable;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,62 +40,6 @@ public class StudentService {
 
     @Autowired
     private AddressRepo addressRepo;
-
-
-//    @Transactional
-//    public StudentDto addStudent(StudentDto studentDto) throws  Exception{
-//        System.out.println("Received studentDto: " + studentDto);
-//        Student student = studentMapper.maptoStudent(studentDto);
-////        System.out.println("student DATA :- "+student);
-//        if (student.getMobileNumbers() != null) {
-//            student.getMobileNumbers().forEach(mobileNumber -> mobileNumber.setStudent(student));
-//        }
-//
-//
-//        if (studentDto.getDepartment() != null && studentDto.getDepartment().getId() != null) {
-//            Department department = departmentRepository.findById(studentDto.getDepartment().getId())
-//                    .orElseThrow(() -> new AttributeNotFoundException("Department not found with id " + studentDto.getDepartment().getId()));
-//            student.setDepartment(department);
-//        }
-//
-//
-//
-//        if (student.getTeachers() != null) {
-//            List<Long> missingTeacherIds = new ArrayList<>();
-//
-//            Set<Teacher> managedTeachers = student.getTeachers().stream()
-//                    .map(teacher -> {
-//                        Optional<Teacher> optionalTeacher = teacherRepo.findById(teacher.getId());
-//                        if (!optionalTeacher.isPresent()) {
-//                            missingTeacherIds.add(teacher.getId());
-//                            return null;
-//                        }
-//                        return optionalTeacher.get();
-//                    })
-//                    .filter(Objects::nonNull)
-//                    .collect(Collectors.toSet());
-//
-//            if (!missingTeacherIds.isEmpty()) {
-//                String ids = missingTeacherIds.stream()
-//                        .map(String::valueOf)
-//                        .collect(Collectors.joining(", "));
-//                throw new IllegalArgumentException("Teacher not found with id " + ids);
-//            }
-//
-//
-//            student.setTeachers(managedTeachers);
-//        }
-//
-////        System.out.println("Student Address :- "+ student.getAddresses());
-//        if (student.getAddresses()!=null){
-//            student.getAddresses().forEach(address -> address.setStudent(student));
-//        }
-//        Student savedStudent = studentRepository.save(student);
-//        //DTO and return
-//        return studentMapper.maptoStudentDto(savedStudent);
-//    }
-
-
 
 
     @Transactional
@@ -159,6 +109,24 @@ public class StudentService {
         return studentMapper.maptoStudentDtos(students);
     }
 
+    public PaginatedResponse<StudentDto> getStudentByPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Student> studentPage = studentRepository.findAll(pageable);
+
+        List<StudentDto> studentDtos = studentPage.stream()
+                .map(studentMapper::maptoStudentDto)
+                .collect(Collectors.toList());
+
+        PaginatedResponse<StudentDto> response = new PaginatedResponse<>();
+        response.setContent(studentDtos);
+        response.setCurrentPage(studentPage.getNumber());
+        response.setPageSize(studentPage.getSize());
+        response.setTotalElements(studentPage.getTotalElements());
+        response.setTotalPages(studentPage.getTotalPages());
+
+        return response;
+    }
+
     public StudentDto getStudentById(long id) throws AttributeNotFoundException {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new AttributeNotFoundException("Student not found with id " + id));
@@ -178,8 +146,6 @@ public class StudentService {
     }
 
 
-
-
     @Transactional
     public StudentDto updateStudent(Long id, StudentDto studentDto) throws AttributeNotFoundException {
         List<String> errorMessages = new ArrayList<>();
@@ -189,9 +155,6 @@ public class StudentService {
 
         student.setStudentName(studentDto.getName());
         student.setAge(studentDto.getAge());
-
-
-
 
 
         if (studentDto.getDepartment() != null && studentDto.getDepartment().getId() != null) {
@@ -237,14 +200,11 @@ public class StudentService {
 
         updateMobileNumbers(student, studentDto.getMobileNumbers());
 
-        updateAddresses(student,studentDto.getAddresses());
+        updateAddresses(student, studentDto.getAddresses());
 
         Student updatedStudent = studentRepository.save(student);
         return studentMapper.maptoStudentDto(updatedStudent);
     }
-
-
-
 
 
     private void updateMobileNumbers(Student student, List<MobileNumberDto> updatedNumbers) {
@@ -278,29 +238,28 @@ public class StudentService {
         }
     }
 
-    private  void updateAddresses(Student student, List<AddressDto> updateAddresses){
-        if(updateAddresses==null){
+    private void updateAddresses(Student student, List<AddressDto> updateAddresses) {
+        if (updateAddresses == null) {
             return;
         }
         List<Address> existingAddresses = student.getAddresses();
 
-        existingAddresses.removeIf(existing ->updateAddresses.stream()
-                .noneMatch(updated -> updated.getId()!=null && updated.getId().equals(existing.getId())));
+        existingAddresses.removeIf(existing -> updateAddresses.stream()
+                .noneMatch(updated -> updated.getId() != null && updated.getId().equals(existing.getId())));
 
-        for (AddressDto updateaddressDto: updateAddresses){
-            if (updateaddressDto.getId()!=null){
+        for (AddressDto updateaddressDto : updateAddresses) {
+            if (updateaddressDto.getId() != null) {
                 existingAddresses.stream().
-                        filter(existing-> existing.getId().equals(updateaddressDto.getId()))
+                        filter(existing -> existing.getId().equals(updateaddressDto.getId()))
                         .findFirst()
                         .ifPresent(existing -> {
                             existing.setArea(updateaddressDto.getArea());
                             existing.setCity(updateaddressDto.getCity());
                             existing.setPincode(updateaddressDto.getPincode());
 
-                                });
-            }
-            else {
-                   Address newAddress = new Address();
+                        });
+            } else {
+                Address newAddress = new Address();
                 newAddress.setArea(updateaddressDto.getArea());
                 newAddress.setCity(updateaddressDto.getCity());
                 newAddress.setPincode(updateaddressDto.getPincode());
@@ -312,14 +271,9 @@ public class StudentService {
     }
 
 
+    public List<StudentDto> getStudentsByCriteria(String area, String city) {
+        List<Student> students = studentRepository.findStudentsByCustomCriteria(area, city);
 
-//    public List<Student> getStudentsByCriteria(String area, String city) {
-//        return studentRepository.findStudentsByCustomCriteria(area, city);
-//    }
-
-    public List<StudentDto> getStudentsByCriteria(String area, String city){
-        List<Student> students= studentRepository.findStudentsByCustomCriteria(area,city);
-
-        return studentMapper.maptoStudentDtos(students) ;
+        return studentMapper.maptoStudentDtos(students);
     }
 }

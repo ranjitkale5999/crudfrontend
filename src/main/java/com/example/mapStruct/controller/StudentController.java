@@ -1,15 +1,21 @@
 package com.example.mapStruct.controller;
 
 import com.example.mapStruct.dto.ApiResponse;
+import com.example.mapStruct.dto.PaginatedResponse;
 import com.example.mapStruct.dto.StudentDto;
 import com.example.mapStruct.entity.Student;
 import com.example.mapStruct.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.AttributeNotFoundException;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +56,15 @@ public class StudentController {
     @GetMapping(value = "/student")
     public List<StudentDto> getAllStudent() {
         return studentService.getAllStudent();
+    }
+
+
+    @GetMapping(value = "/student/getStudentByPagination")
+    public PaginatedResponse<StudentDto> getStudentByPagination(@RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "5") int size) {
+
+        return studentService.getStudentByPagination(page, size);
+
     }
 
     @GetMapping(value = "/student/{id}")
@@ -116,9 +131,8 @@ public class StudentController {
     }
 
 
-
     @GetMapping("/student/criteria")
-     //    public List<Student> getStudents(@PathVariable(value = "area", required = false) String area, @PathVariable(value="city", required = false) String city)
+    //    public List<Student> getStudents(@PathVariable(value = "area", required = false) String area, @PathVariable(value="city", required = false) String city)
     public ResponseEntity<ApiResponse<List<StudentDto>>> getStudents(
             @RequestParam(value = "area", required = false) String area,
             @RequestParam(value = "city", required = false) String city) {
@@ -134,7 +148,7 @@ public class StudentController {
                 ? "No students found for area: " + area + " and city: " + city
                 : "Students fetched successfully");
         response.setData(students);
-System.out.println(response);
+        System.out.println(response);
         return new ResponseEntity<>(response, students.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK);
     }
 
