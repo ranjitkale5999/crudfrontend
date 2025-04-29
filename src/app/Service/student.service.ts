@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Student } from '../Class/student';
 import { ApiResponse } from '../Interfaces/api-response';
+import { PaginatedResponse } from '../Interfaces/paginated-response';
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +44,12 @@ export class StudentService {
     return this.httpClient.get<ApiResponse<Student[]>>(`${this.baseUrl}/criteria`, { params });
   }
   
+  getStudentByPagination(page: number, size: number): Observable<PaginatedResponse<Student>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    return this.httpClient.get<PaginatedResponse<Student>>(`${this.baseUrl}/getStudentByPagination`, { params });
+  }
 
 }

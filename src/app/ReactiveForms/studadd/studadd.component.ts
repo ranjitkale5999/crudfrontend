@@ -74,7 +74,7 @@ export class StudaddComponent {
     // this.router.navigate(['/studrective']);
     this.dialogRef.close();
     this.router.navigate(['/studrective']).then(() => {
-      window.location.reload();
+      // window.location.reload();
     });
   }
 
