@@ -6,6 +6,7 @@ import com.example.mapStruct.dto.StudentDto;
 import com.example.mapStruct.entity.Student;
 import com.example.mapStruct.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,12 +59,22 @@ public class StudentController {
         return studentService.getAllStudent();
     }
 
-
+    //First Approach 1(getStudentByPagination)
     @GetMapping(value = "/student/getStudentByPagination")
     public PaginatedResponse<StudentDto> getStudentByPagination(@RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "5") int size) {
 
         return studentService.getStudentByPagination(page, size);
+
+    }
+
+    //First Approach 2(getStudentByPagination1)
+    @GetMapping(value = "/student/getStudentByPagination1")
+    public Page<StudentDto> getStudentByPagination1(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "5") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return studentService.getStudentByPagination1(pageable);
 
     }
 

@@ -127,6 +127,11 @@ public class StudentService {
         return response;
     }
 
+    public Page<StudentDto> getStudentByPagination1(Pageable pageable) {
+        return studentRepository.findAll(pageable)
+                .map(studentMapper::maptoStudentDto);
+    }
+
     public StudentDto getStudentById(long id) throws AttributeNotFoundException {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new AttributeNotFoundException("Student not found with id " + id));
