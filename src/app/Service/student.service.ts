@@ -49,7 +49,8 @@ export class StudentService {
       .set('page', page)
       .set('size', size);
 
-    return this.httpClient.get<PaginatedResponse<Student>>(`${this.baseUrl}/getStudentByPagination`, { params });
+    return this.httpClient.get<PaginatedResponse<Student>>(`${this.baseUrl}/getStudentByPagination1`, { params });
+    // return this.httpClient.get<PaginatedResponse<Student>>(`${this.baseUrl}/getStudentByPagination`, { params });
   }
 
 }
