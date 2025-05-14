@@ -17,6 +17,8 @@ import { StudreactiveComponent } from './ReactiveForms/studreactive/studreactive
 import { StudentUpdateComponent } from './ReactiveForms/student-update/student-update.component';
 import { MatButtonModule } from '@angular/material/button';
 import{ MatPaginatorModule} from'@angular/material/paginator';
+import { DemoComponent } from './ReactiveForms/demo/demo.component';
+import { DemoModule } from './ReactiveForms/demo/demo.module';
 @NgModule({ declarations: [
         AppComponent,
         StudComponent,
@@ -26,7 +28,8 @@ import{ MatPaginatorModule} from'@angular/material/paginator';
         StudaddComponent,
         StudupdateComponent,
         StudreactiveComponent,
-        StudentUpdateComponent
+        StudentUpdateComponent,
+        DemoComponent
     ],
     bootstrap: [AppComponent],
     schemas: [NO_ERRORS_SCHEMA],
@@ -38,7 +41,8 @@ import{ MatPaginatorModule} from'@angular/material/paginator';
         ReactiveFormsModule,
         CommonModule,
         MatButtonModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        DemoModule
         
 ],
         providers: [provideHttpClient(withInterceptorsFromDi())] })
